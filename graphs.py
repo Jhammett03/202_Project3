@@ -66,7 +66,7 @@ class Graph:
         queue = deque()
         queue.append(vertex)
         vertex.setDistance(0)
-        paths = [(vertex, [vertex.getId()], 0)]  # (vertex, path, cost)
+        paths = [(vertex, [], 0)]  # (vertex, path, cost)
         visited = {vertex}
 
         while queue:
@@ -74,10 +74,9 @@ class Graph:
             current_vertex.setVisited()
 
             for neighbor in current_vertex.getConnections():
-                if not neighbor.visited:
+                if neighbor not in visited:
                     visited.add(neighbor)
-                    new_distance = current_vertex.getDistance() + current_vertex.getWeight(neighbor)
-
+                    new_distance = current_vertex.distance + current_vertex.getWeight(neighbor)
                     if new_distance < neighbor.distance:
                         neighbor.setDistance(new_distance)
                         neighbor.setPrevious(current_vertex)
@@ -89,6 +88,6 @@ class Graph:
                         while v.previous is not None:
                             path.insert(0, v.previous.getId())  # Store vertices instead of edges
                             v = v.previous
-                        paths.append((neighbor, path, neighbor.getDistance()))
+                        paths.append((neighbor, path, new_distance))
 
         return paths
